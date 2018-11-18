@@ -2,13 +2,13 @@ version: '3.7'
 services:
     db:
         image: mysql
-        command: ["--default-authentication-plugin=mysql_native_password"]
         ports:
             - "3306:3306"
         env_file:
             - ./project/.env
+
     php:
-        build: ./php-fpm
+        build: ./build/fpm
         ports:
             - "9000:9001"
         volumes:
@@ -20,13 +20,15 @@ services:
         extra_hosts:
             - "docker.host:127.0.0.1"
     nginx:
-        build: ./nginx
+        image: nginx
         ports:
             - "80:80"
         links:
             - php
         volumes:
-            - ./build/nginx:/etc/nginx/
+            - ./build/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./build/nginx/conf.d/project.conf:/etc/nginx/conf.d/project.conf
+            - ./build/nginx/conf.d/upstream.conf:/etc/nginx/conf.d/upstream.conf
             - ./logs/nginx:/var/log/nginx:cached
             - ./project:/var/www/project:cached
     elk:

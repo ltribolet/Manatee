@@ -8,4 +8,6 @@ RUN composer global require hirak/prestissimo
 RUN apk add --update --no-cache nodejs nodejs-npm
 RUN npm install -g gulp yarn
 
+WORKDIR /app
+
 ENTRYPOINT [""]
